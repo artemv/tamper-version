@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-v1-{{ checksum "package.json" }}
+      - run:
+          name: install-deps
+          command: |
+            yarn --frozen-lockfile
+      - save_cache:
+          key: dependency-cache-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+            - ~/.cache/yarn
+      - run:
+          name: post-deps
+          command: |
+            mkdir ci-artifacts
+            cp yarn.lock ci-artifacts/
+          when: always
+      - run: yarn eslint
+      - run:
+          name: test
+          command: |
+            yarn test
+            git checkout -- package.json
+          when: always
+      - store_artifacts:
+          path: ci-artifacts/
+
+  publish-test:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-v2-{{ checksum "package.json" }}
+      - run:
+          name: deploy
+          command: |
+            if [ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]; then
+              ALLOW_FAILING=false yarn simple-semantic-release-pre
+            fi
+
+  publish:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-v1-{{ checksum "package.json" }}
+      - run:
+          name: deploy
+          command: |
+            if [ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]; then
+              yarn semantic-release
+            fi
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test
+      - publish:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+          context: "my npm-based projects"
+      - publish-test:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: master
+          context: "my npm-based projects"
+

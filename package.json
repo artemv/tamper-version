@@ -1,0 +1,45 @@
+{
+  "bin": "bin/cli.js",
+  "main": "src",
+  "name": "tamper-version",
+  "description": "CLI utility to tamper package.json' version",
+  "repository": "artemv/tamper-version",
+  "author": {
+    "name": "Artem Vasiliev",
+    "email": "artem.job@gmail.com",
+    "url": "github.com/artemv"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "keywords": [
+    "package",
+    "version",
+    "cli",
+    "utilities"
+  ],
+  "engines": {
+    "node": ">=10.13"
+  },
+  "devDependencies": {
+    "ava": "^2.2.0",
+    "codecov": "^3.0.0",
+    "eslint": "^6.0.0",
+    "eslint-config-google": "^0.13.0",
+    "nyc": "^13.1.0",
+    "simple-semantic-config": "^6.0.14"
+  },
+  "release": {
+    "extends": "simple-semantic-config"
+  },
+  "scripts": {
+    "eslint": "eslint bin src test",
+    "test": "nyc ava"
+  },
+  "dependencies": {
+    "meow": "^6.0.0"
+  }
+}
