@@ -13,6 +13,7 @@ const cli = meow(`
 
       $ tamper-version \`cat .version\` --full
     This will put contents of .version file to package.json' version field.
+    Prior to changing package.json will be saved to package.json.bak.
 `, {
   flags: {
     full: {
