@@ -12,7 +12,7 @@ $ npm install --global tamper-version
 ## Examples
 You can use it to make your application version equal to current Git hash - can be useful at CI e.g. before building Electron app' intermediate binary:
 ```
-  yarn tamper-version "$(git rev-parse --short HEAD)" --full
+  yarn tamper-version "$(git rev-parse --short HEAD)"
 ```
 
 ## Usage
